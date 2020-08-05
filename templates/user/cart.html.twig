@@ -1,0 +1,115 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+	<h2 class="mt-3 mb-3">Votre panier</h2>
+	<div class="row">
+		<div class="col-lg-8">
+			{% if orders.count %}
+				{% for order in orders %}
+					<div class="row align-items-center text-center border rounded mb-2">
+						<div class="col-lg-2"><img class="m-2 img-fluid" src="{{ order.product.first.image }}"></div>
+						<div class="col-4 font-weight-bold">{{ order.product.first.name }}</div>
+						<div class="col-2">{{ order.product.first.price }}
+							€</div>
+						<div class="col-2">{{ order.quantity }}</div>
+						<div class="col-2">
+							<a href="{{ path('cart_remove', {id: order.product.first.id}) }}">
+								<i class="fas fa-times"></i>
+							</a>
+						</div>
+					</div>
+					{% set total = total + (order.quantity * order.product.first.price) %}
+				{% endfor %}
+			{% else %}
+				<h5 class="text-muted mt-5 mb-5">Aucun article dans votre panier.</h5>
+			{% endif %}
+		</div>
+		<div class="col-lg-4">
+			<div class="border rounded p-3">
+				<h4>Passer votre commande</h4>
+				<p>Prix :
+					{{ total }}
+					€</p>
+				{% if orders.count %}
+					<form action="{{ path('request_command', {id: command.id}) }}" method="POST">
+						<button type="submit" class="btn btn-primary btn-block">Commander</button>
+					</form>
+				{% else %}
+					<form action="" method="POST">
+						<button type="submit" class="btn btn-primary btn-block" disabled>Commander</button>
+					</form>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div>
+		{% set waiting = false %}
+		{% for command in commands %}
+			{% if command.status.title == "WAITING" %}
+				{% set waiting = true %}
+			{% endif %}
+		{% endfor %}
+
+		{% if waiting == true %}
+			<h3 class="mt-5">Commandes en attente de confirmation</h3>
+			<div class="row text-center mb-3 mt-3">
+				<div class="col-4 font-weight-bold">Numéro de commande</div>
+				<div class="col-4 font-weight-bold">Montant de la commande</div>
+				<div class="col-4 font-weight-bold">Date</div>
+			</div>
+			{% for command in commands %}
+				{% if command.status.title == "WAITING" %}
+					<div class="row border rounded text-center pb-3 pt-3 mb-2">
+						<div class="col-4">{{ command.id }}</div>
+						{% for order in command.orders %}
+							{% set totalWaitingCommand = totalWaitingCommand + (order.quantity * order.product.first.price) %}
+						{% endfor %}
+						<div class="col-4">{{ totalWaitingCommand }}
+							€</div>
+						<div class="col-4">{{ command.createdAt | date('d/m/Y') }}</div>
+					</div>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+	</div>
+	<div>
+		{% set confirmed = false %}
+		{% for command in commands %}
+			{% if command.status.title == "CONFIRMED" %}
+				{% set confirmed = true %}
+			{% endif %}
+		{% endfor %}
+
+		{% if confirmed == true %}
+			<h3 class="mt-5">Commandes confirmées</h3>
+			<div class="row text-center mb-3 mt-3">
+				<div class="col-4 font-weight-bold">Numéro de commande</div>
+				<div class="col-4 font-weight-bold">Montant de la commande</div>
+				<div class="col-4 font-weight-bold">Date</div>
+			</div>
+			{% for command in commands %}
+				{% if command.status.title == "CONFIRMED" %}
+					<div class="row border rounded text-center pb-3 pt-3 mb-2">
+						<div class="col-4">{{ command.id }}</div>
+						{% for order in command.orders %}
+							{% set totalConfirmedCommand = totalConfirmedCommand + (order.quantity * order.product.first.price) %}
+						{% endfor %}
+						<div class="col-4">{{ totalConfirmedCommand }}
+							€</div>
+						<div class="col-4">{{ command.createdAt | date('d/m/Y') }}</div>
+					</div>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+	</div>
+	<h3 class="mt-5">Articles qui pourraient vous intéresser</h3>
+	<div class="row scrolling-wrapper d-flex">
+		{% for product in products %}
+			<div class="card col-3 border rounded">
+				<img class="mt-2 img-fluid" src="{{ product.image }}"/>
+				<p>
+					<a href="{{ path('product_details', {id: product.id}) }}">{{ product.name }}</a><br>{{ product.price }}€</p>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}

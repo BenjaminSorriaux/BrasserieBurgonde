@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="mt-5 example-wrapper">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Nos produits</h2>
+            <button class="btn btn-link" onclick="showFilters()"><h4><i class="fas fa-filter"></i></h4></button>
+        </div>
+        <div id="hidden">
+            <hr>
+            <div class="ml-4 mr-4 d-flex justify-content-between align-items-center">
+                {% for category in categories %}
+                    <a href="{{ path('category_products', {id: category.id}) }}">{{ category.title }}</a>
+                {% endfor %}
+            </div>
+            <hr>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                {% if products %}
+                    {% for product in products %}
+                        <div class="row border rounded mb-2">
+                        <div class="col-lg-3 mt-2">
+                            <img class="mb-2 img-fluid" src="{{ product.image }}" />
+                        </div>
+                        <div class="col-9 mt-2 hidden">
+                            <a href="{{ path('product_details', {id: product.id}) }}">
+                                <h4 class="text-primary">{{ product.name }}</h4>
+                            </a>
+                            <p class="text-justify">{{ product.description }}</p>
+                        </div>
+                        <div class="col-9 mt-2 visible">
+                            <a href="{{ path('product_details', {id: product.id}) }}">
+                                <h4 class="text-primary">{{ product.name }}</h4>
+                            </a>
+                            <p class="text-justify">{{ product.price }} €</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {{ knp_pagination_render(products) }}
+                {% else %}
+                    <p class="text-muted">Aucun produit trouvé.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    function showFilters() {
+        var x = document.getElementById("hidden");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+</script>
+{% endblock %}

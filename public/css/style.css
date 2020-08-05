@@ -1,0 +1,49 @@
+#hidden {
+    display: none;
+}
+
+#map {
+    height: 350px;
+    width: 350px;
+}
+
+.scrolling-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.card {
+    display: inline-block;
+}
+
+.button {
+    background-color: #398AF5;
+    color: #FFFFFF;
+}
+
+.visible {
+    visibility: hidden;
+    display: none;
+}
+
+.hidden {
+    visibility: visible;
+    display: auto;
+}
+
+@media screen and (max-width: 1280px) {
+    #map {
+        height: auto;
+        width: auto;
+    }
+    .hidden {
+        visibility: hidden;
+        display: none;
+        height: 0;
+    }
+    .visible {
+        visibility: visible;
+        display: block;
+    }
+}

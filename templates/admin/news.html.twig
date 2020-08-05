@@ -1,0 +1,51 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="../css/style.css">
+{% endblock %}
+
+{% block body %}
+    <a class="btn btn-primary mt-3 mb-3" href="{{ path('create_news') }}"><i class="fas fa-plus mr-2"></i>Ajouter une actualité</a>
+	<div class="row text-center mb-3 mt-3 hidden">
+		<div class="col-2"></div>
+		<div class="col-4 font-weight-bold">Titre</div>
+		<div class="col-2 font-weight-bold">Date</div>
+		<div class="col-2 font-weight-bold">Contenu</div>
+		<div class="col-2 font-weight-bold">Actions</div>
+	</div>
+    {% for actu in news %}
+        <div class="row align-items-center text-center border rounded mb-2">
+            <div class="col-lg-2"><img class="m-2 img-fluid"  src="{{ actu.picture }}"></div>
+            <div class="col-lg-4 font-weight-bold">{{ actu.title }}</div>
+            <div class="col-lg-2">{{ actu.createdAt | date('d/m/Y h:i') }}</div>
+            <div class="col-lg-2">{{ actu.content|length > 40 ? actu.content|slice(0, 40) ~ '...' : actu.content  }}</div>
+            <div class="col-lg-2">
+                <a href="{{ path('edit_news', {id: actu.id}) }}"><i class="fas fa-edit mr-3 text-muted"></i></a>
+                <a href="" data-toggle="modal" data-target="#removeModal-{{ actu.id }}">
+						<i class="fas fa-times text-danger"></i>
+					</a>
+
+					<div class="modal fade" id="removeModal-{{ actu.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								Souhaitez-vous vraiment supprimer l'actualité <span class="text-danger">{{ actu.title }}</span> ?
+							</div>
+							<div class="modal-footer">
+								<a href="{{ path('remove_news', {id: actu.id}) }}" type="button" class="btn btn-primary">Confirmer</a>
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+							</div>
+							</div>
+						</div>
+					</div>
+            </div>
+        </div>
+    {% endfor %}
+	{{ knp_pagination_render(news) }}
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="../css/style.css">
+{% endblock %}
+
+{% block body %}
+	<h2 class="mt-3">Liste des commandes</h2>
+	<div class="row text-center mb-3 mt-3 hidden">
+		<div class="col-3 font-weight-bold">Numéro de commande</div>
+		<div class="col-3 font-weight-bold">Acheteur</div>
+		<div class="col-2 font-weight-bold">Date</div>
+		<div class="col-2 font-weight-bold">Actions</div>
+		<div class="col-2 font-weight-bold">Détails</div>
+	</div>
+	{% for command in commands %}
+		<div class="row overflow-hidden align-items-center text-center border rounded mb-2 pt-3 pb-3">
+			{% if command.status.title == "WAITING" %}
+				<div class="col-3 font-weight-bold">{{ command.id }}</div>
+				<div class="col-3">{{ command.user.firstname }}
+					{{ command.user.lastname }}</div>
+				<div class="col-2">{{ command.createdAt | date('d/m/Y') }}</div>
+				<div class="col-2">
+					<a href="{{ path('confirm_command', {id: command.id}) }}">
+						<i class="fas fa-check text-success mr-3"></i>
+					</a>
+					<a href="" data-toggle="modal" data-target="#removeModal-{{ command.id }}">
+						<i class="fas fa-times text-danger"></i>
+					</a>
+					<div class="modal fade" id="removeModal-{{ command.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								Souhaitez-vous vraiment supprimer la commande numéro <span class="text-danger">{{ command.id }}</span> ?
+							</div>
+							<div class="modal-footer">
+								<a href="{{ path('remove_command', {id: command.id}) }}" type="button" class="btn btn-primary">Confirmer</a>
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+							</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% else %}
+				<div class="col-3 text-success font-weight-bold">{{ command.id }}</div>
+				<div class="col-3 text-success">{{ command.user.firstname }}
+					{{ command.user.lastname }}</div>
+				<div class="col-2 text-success">{{ command.createdAt | date('d/m/Y') }}</div>
+				<div class="col-2">
+					<i class="fas fa-check mr-3"></i>
+					<a href="" data-toggle="modal" data-target="#removeModal-{{ command.id }}">
+						<i class="fas fa-times text-danger"></i>
+					</a>
+
+					<div class="modal fade" id="removeModal-{{ command.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Supprimer</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								Souhaitez-vous vraiment supprimer la commande numéro <span class="text-danger">{{ command.id }}</span> ?
+							</div>
+							<div class="modal-footer">
+								<a href="{{ path('remove_command', {id: command.id}) }}" type="button" class="btn btn-primary">Confirmer</a>
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+							</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			{% endif %}
+			<div class="col-2">
+				<button type="button" class="btn btn-link" data-toggle="modal" data-id="{{ command.id }}" data-target="#productsModal-{{ command.id }}">Produits</button>
+
+				<div class="modal fade" id="productsModal-{{ command.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Produits</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<div class="row text-center mb-2">
+									<div class="col-3"></div>
+									<div class="col-3 font-weight-bold">Nom du produit</div>
+									<div class="col-2 font-weight-bold">Prix</div>
+									<div class="col-2 font-weight-bold">Quantité</div>
+								</div>
+								{% for order in command.orders %}
+									<div class="row align-items-center text-center border rounded mb-2">
+										<div class="col-3"><img class="m-2" width="100" src="{{ order.product.first.image }}"></div>
+										<div class="col-3">{{ order.product.first.name }}</div>
+										<div class="col-2">{{ order.product.first.price }}
+											€</div>
+										<div class="col-2">{{ order.quantity }}</div>
+									</div>
+									{% set total = total + (order.quantity * order.product.first.price) %}
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}
+
+{% block javascrits %}
+{% endblock %}

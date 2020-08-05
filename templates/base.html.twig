@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="https://bootswatch.com/4/flatly/bootstrap.min.css"/>
+		<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+		<link rel="stylesheet" href="css/style.css"/> {% block stylesheets %}{% endblock %}
+		</head>
+		<body>
+			<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+				<a class="navbar-brand" href="{{ path('home') }}"><img class="img-fluid" src="{{ app.request.getBasePath() }}/images/brasserie.png"></img>
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse text-center" id="navbarColor01">
+				{% if app.user %}
+					{% if app.user.role.name == "ADMIN" %}
+						<ul class="navbar-nav mr-auto">
+							<li class="nav-item">
+								<div class="dropdown">
+									<a class="btn text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										Actualités
+									</a>
+									<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+										<a class="dropdown-item" href="{{ path('manage_news') }}">Gérer les actualités</a>
+										<a class="dropdown-item" href="{{ path('news') }}">Voir la liste</a>
+									</div>
+								</div>
+							</li>
+							<li class="nav-item">
+								<div class="dropdown">
+									<a class="btn text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										Produits
+									</a>
+									<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+										<a class="dropdown-item" href="{{ path('manage_products') }}">Gérer les produits</a>
+										<a class="dropdown-item" href="{{ path('products') }}">Voir la liste</a>
+									</div>
+								</div>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-white" href="{{ path('manage_categories') }}">Catégories</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-white" href="{{ path('manage_comments') }}">Commentaires</a>
+							</li>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-white" href="{{ path('manage_admins') }}">Administrateurs</a>
+						</li>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-white" href="{{ path('manage_commands') }}">Commandes</a>
+					</li>
+				</ul>
+				<div class="my-2 my-lg-0">
+					<a class="nav-link" href="{{ path('logout') }}">
+						<h4>
+							<i class="fas fa-sign-out-alt text-white"></i>
+						</h4>
+					</a>
+				</div>
+			{% else %}
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link ml-3" href="{{ path('news') }}">Actualités</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link ml-3" href="{{ path('products') }}">Produits</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link ml-3" href="{{ path('contact') }}">Nous contacter</a>
+					</li>
+				</ul>
+				<div class="form-inline my-2 my-lg-0 hidden">
+					<a class="nav-link" href="{{ path('cart') }}">
+						<h4>
+							<i class="fas fa-shopping-cart text-white"></i>
+						</h4>
+					</a>
+					<a class="nav-link" href="{{ path('logout') }}">
+						<h4>
+							<i class="fas fa-sign-out-alt text-white"></i>
+						</h4>
+					</a>
+				</div>
+				<div class="visible">
+					<div class="d-flex justify-content-center">
+						<a class="nav-link" href="{{ path('cart') }}">
+							<h4>
+								<i class="fas fa-shopping-cart text-white"></i>
+							</h4>
+						</a>
+						<a class="nav-link" href="{{ path('logout') }}">
+							<h4>
+								<i class="fas fa-sign-out-alt text-white"></i>
+							</h4>
+						</a>
+					</div>
+				</div>
+			{% endif %}
+		{% else %}
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link ml-3" href="{{ path('news') }}">Actualités</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link ml-3" href="{{ path('products') }}">Produits</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link ml-3" href="{{ path('contact') }}">Nous contacter</a>
+				</li>
+			</ul>
+			<div class="my-2 my-lg-0">
+				<a class="nav-link" href="{{ path('login') }}">
+					<h4>
+						<i class="fas fa-sign-in-alt text-white"></i>
+					</h4>
+				</a>
+			</div>
+		{% endif %}
+	</html>
+</div></nav><div class="container"> {% block body %}{% endblock %}
+</div>
+{% block javascripts %}
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+{% endblock %}</body></html>
